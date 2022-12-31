@@ -22,3 +22,14 @@ app.get("/", (req, res) => {
     console.log("error");
   }
 });
+
+// API REST con PostgreSQL(GET)
+
+app.get("/posts", async (req, res) => {
+  try {
+    const likes = await getPost();
+    res.json(likes);
+  } catch (error) {
+    res.json({ message: "El recurso no está disponible" });
+  }
+});
