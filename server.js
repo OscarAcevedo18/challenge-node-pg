@@ -12,3 +12,13 @@ app.use(express.static("public"));
 app.listen(process.env.PORT, console.log("SERVIDOR ENCENDIDO"));
 
 CsbInspector();
+
+// Devolviendo el html
+
+app.get("/", (req, res) => {
+  try {
+    return res.sendFile(__dirname + "/public/index.html");
+  } catch (e) {
+    console.log("error");
+  }
+});
