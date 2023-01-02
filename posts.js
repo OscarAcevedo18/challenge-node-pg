@@ -10,16 +10,6 @@ const pool = new Pool({
   allowExitOnIdle: true,
 });
 
-const posts = async () => {
-  try {
-    const result = await pool.query("SELECT NOW()");
-    console.log(result);
-  } catch (e) {
-    console.log("error");
-  }
-};
-posts();
-
 //Funcion muestra si existe registro con los mismos datos que queremos agregar//
 
 const duplicatePost = async (payload) => {

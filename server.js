@@ -13,6 +13,12 @@ app.listen(process.env.PORT, console.log("SERVIDOR ENCENDIDO"));
 
 CsbInspector();
 
+const errorDuplicate = {
+  status: 400,
+  errorMessage: "error",
+  message: "Registro Duplicado",
+}
+
 const errorServer = {
   status: 500,
   statusText: "error",
@@ -54,7 +60,9 @@ app.post("/posts", async (req, res) => {
       res.send("Falta Ingresar Datos");
       // console.log("Falta Ingresar Datos");
     } else if (resultDuplicate[0].num > 0) {
-      res.send("Registro Ya Existente");
+      res
+      .status(errorDuplicate.status)
+      .send({ status: errorDuplicate.errorMessage, data: errorDuplicate.message });
       // console.log("Registro Ya Existente");
     } else {
       await addPost(payload);
