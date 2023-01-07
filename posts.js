@@ -1,14 +1,5 @@
 // Primera consulta SQL con Node
-require("dotenv").config();
-const { Pool } = require("pg");
-
-const pool = new Pool({
-  host: process.env.HOST,
-  user: process.env.USER,
-  password: process.env.PASSWORD,
-  database: process.env.DATABASE,
-  allowExitOnIdle: true,
-});
+const pool = require("./conectDb").getInstance();
 
 //Funcion muestra si existe registro con los mismos datos que queremos agregar//
 
