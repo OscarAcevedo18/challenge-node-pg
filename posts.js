@@ -56,7 +56,16 @@ const modifiedPosts = async (id) => {
   }
 };
 
+const deletePosts = async (id) => {
+  try {
+    const consulta = "DELETE FROM posts WHERE id = $1";
+    const values = [id];
+    const result = await pool.query(consulta, values);
+  } catch (e) {
+    console.log("error");
+  }
+};
 
 // MODULE EXPORTS
 
-module.exports = { addPost, getPost, duplicatePost, modifiedPosts };
+module.exports = { addPost, getPost, duplicatePost, modifiedPosts, deletePosts };

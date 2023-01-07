@@ -1,5 +1,5 @@
 // API REST con PostgreSQL(GET)
-const { addPost, getPost, duplicatePost, modifiedPosts } = require("./posts");
+const { addPost, getPost, duplicatePost, modifiedPosts, deletePosts } = require("./posts");
 const express = require("express");
 const app = express();
 const cors = require("cors");
@@ -90,6 +90,18 @@ app.put("/posts/like/:id", async (req, res) => {
   try {
     await modifiedPosts(id);
     res.send("Posts modificado con éxito");
+  } catch {
+    res
+      .status(errorServer.status)
+      .send({ status: errorServer.statusText, data: errorServer.text });
+  }
+});
+
+app.delete("/posts/:id", async (req, res) => {
+  try {
+    const { id } = req.params;
+    await deletePosts(id);
+    res.send("Posts eliminado con éxito");
   } catch {
     res
       .status(errorServer.status)
