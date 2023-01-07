@@ -1,5 +1,5 @@
 // API REST con PostgreSQL(GET)
-const { addPost, getPost, duplicatePost } = require("./posts");
+const { addPost, getPost, duplicatePost, modifiedPosts } = require("./posts");
 const express = require("express");
 const app = express();
 const cors = require("cors");
@@ -60,15 +60,37 @@ app.post("/posts", async (req, res) => {
       res.send("Falta Ingresar Datos");
       // console.log("Falta Ingresar Datos");
     } else if (resultDuplicate[0].num > 0) {
-      res
-      .status(errorDuplicate.status)
-      .send({ status: errorDuplicate.errorMessage, data: errorDuplicate.message });
+      res.status(errorDuplicate.status).send({
+        status: errorDuplicate.errorMessage,
+        data: errorDuplicate.message,
+      });
       // console.log("Registro Ya Existente");
     } else {
       await addPost(payload);
       res.send("Post Agregado con Éxito");
     }
   } catch (error) {
+    const { code } = error;
+    if (code == "23502") {
+      res
+        .status(400)
+        .send(
+          "Se ha violado la restricción NOT NULL en uno de los campos de la tabla"
+        );
+    } else {
+      res
+        .status(errorServer.status)
+        .send({ status: errorServer.statusText, data: errorServer.text });
+    }
+  }
+});
+
+app.put("/posts/like/:id", async (req, res) => {
+  const { id } = req.params;
+  try {
+    await modifiedPosts(id);
+    res.send("Posts modificado con éxito");
+  } catch {
     res
       .status(errorServer.status)
       .send({ status: errorServer.statusText, data: errorServer.text });
