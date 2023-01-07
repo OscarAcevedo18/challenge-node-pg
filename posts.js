@@ -45,6 +45,18 @@ const getPost = async () => {
   }
 };
 
+const modifiedPosts = async (id) => {
+  try {
+    const consulta =
+      "UPDATE posts SET likes = CASE WHEN likes IS NULL THEN 1 ELSE likes +1 END WHERE id=$1 RETURNING *";
+    const values = [id];
+    const result = await pool.query(consulta, values);
+  } catch (e) {
+    console.log("error");
+  }
+};
+
+
 // MODULE EXPORTS
 
-module.exports = { addPost, getPost, duplicatePost };
+module.exports = { addPost, getPost, duplicatePost, modifiedPosts };
