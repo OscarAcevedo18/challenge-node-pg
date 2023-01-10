@@ -1,5 +1,5 @@
 // API REST con PostgreSQL(GET)
-const { addPost, getPost, duplicatePost, modifiedPosts, deletePosts } = require("./posts");
+const { addPost, getPost, duplicatePost, modifiedPosts, deletePosts, registerSearch } = require("./posts");
 const express = require("express");
 const app = express();
 const cors = require("cors");
@@ -39,6 +39,7 @@ app.get("/", (req, res) => {
 
 app.get("/posts", async (req, res) => {
   try {
+    const { id } = req.params;
     const likes = await getPost();
     res.json(likes);
   } catch (error) {
@@ -48,6 +49,7 @@ app.get("/posts", async (req, res) => {
 
 // API REST con PostgreSQL(POST)
 app.post("/posts", async (req, res) => {
+  const { id } = req.params;
   try {
     const payload = req.body;
     const resultDuplicate = await duplicatePost(payload);
@@ -86,8 +88,12 @@ app.post("/posts", async (req, res) => {
 });
 
 app.put("/posts/like/:id", async (req, res) => {
-  const { id } = req.params;
   try {
+  const { id } = req.params;
+  const findId = registerSearch(id)
+if (findId.length ==0){
+  res.status(404)
+}
     await modifiedPosts(id);
     res.send("Posts modificado con éxito");
   } catch {
@@ -100,6 +106,10 @@ app.put("/posts/like/:id", async (req, res) => {
 app.delete("/posts/:id", async (req, res) => {
   try {
     const { id } = req.params;
+      const findId = registerSearch(id)
+if (findId.length ==0){
+  res.status(404)
+}
     await deletePosts(id);
     res.send("Posts eliminado con éxito");
   } catch {

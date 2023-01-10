@@ -12,6 +12,15 @@ const duplicatePost = async (payload) => {
   return rows;
 };
 
+const registerSearch = async (id) => {
+  const SQLquery = {
+    text:"SELECT * FROM posts WHERE id=$1",
+    values: [id]
+  };
+  const {rows} = await pool.query(SQLquery);
+  return rows;
+}
+
 // Primer registro en PostgreSQL desde Node
 
 const addPost = async (payload) => {
@@ -37,7 +46,7 @@ const addPost = async (payload) => {
 
 const getPost = async () => {
   try {
-    const { rows } = await pool.query("SELECT * FROM posts");
+    const { rows } = await pool.query("SELECT * FROM posts ORDER BY id DESC");
     console.log(rows);
     return rows;
   } catch (e) {
@@ -50,7 +59,7 @@ const modifiedPosts = async (id) => {
     const consulta =
       "UPDATE posts SET likes = CASE WHEN likes IS NULL THEN 1 ELSE likes +1 END WHERE id=$1 RETURNING *";
     const values = [id];
-    const result = await pool.query(consulta, values);
+    await pool.query(consulta, values);
   } catch (e) {
     console.log("error");
   }
@@ -60,7 +69,7 @@ const deletePosts = async (id) => {
   try {
     const consulta = "DELETE FROM posts WHERE id = $1";
     const values = [id];
-    const result = await pool.query(consulta, values);
+    await pool.query(consulta, values);
   } catch (e) {
     console.log("error");
   }
@@ -68,4 +77,4 @@ const deletePosts = async (id) => {
 
 // MODULE EXPORTS
 
-module.exports = { addPost, getPost, duplicatePost, modifiedPosts, deletePosts };
+module.exports = { addPost, getPost, duplicatePost, modifiedPosts, deletePosts, registerSearch };
